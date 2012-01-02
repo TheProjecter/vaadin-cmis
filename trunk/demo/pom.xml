@@ -40,7 +40,7 @@
 	    <jsp-api.version>2.2</jsp-api.version>
 	    <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
 	    <maven-resources-plugin.version>2.4.3</maven-resources-plugin.version>
-	    <maven-javadoc-plugin.version>2.3.2</maven-javadoc-plugin.version>
+	    <maven-javadoc-plugin.version>2.4.3</maven-javadoc-plugin.version>
 
 
 	</properties>
@@ -158,7 +158,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-	<version>${maven-javadoc-plugin.version}</version>
+<!--	<version>${maven-javadoc-plugin.version}</version> -->
         <configuration>
           <links>
             <link>http://vaadin.com/api/</link>
