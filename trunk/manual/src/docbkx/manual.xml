@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:xl="http://www.w3.org/1999/xlink">
+    <info>
+        <title>Vaadin-CMIS-Alfresco integration toolkit 0.0.1 Manual</title>
+        <author>
+            <personname>
+                <firstname>Aaron</firstname>
+                <surname>Lee</surname>
+            </personname>
+            <email>aaron@fatminds.com</email>
+        </author>
+        <copyright>
+            <year>2010-2012</year>
+            <holder>my organization</holder>
+        </copyright>
+    </info>
+
+    <section xml:id="introduction">
+        <title>Introduction</title>
+        <para>
+            This toolkit, the Vaadin-CMIS(-Alfresco) or "VC" integration was created by <link xl:href="http://fatminds.com">Fatminds</link> and 
+            <link xl:href="http://drivedev.com">DriveDev</link>.
+       	</para>
+       	
+		<para>
+			VC was created to enable rapid implementation of high-quality browser-based applications that leverage the capabilities of
+			modern CMIS content repositories. We're an Alfresco shop, so this implementation has focused first on those features of Alfresco
+			that are <link xl:href="http://wiki.alfresco.com/wiki/CMIS_Model_Mapping">reachable over CMIS</link>*, and on providing a 
+			mostly automatic binding between them and standard Vaadin UI interfaces.
+        </para>
+        
+    </section>
+
+    <section xml:id="usage">
+        <title>Using VC</title>
+        <para>
+        	VC implements the Vaadin <interfacename>com.vaadin.data.Container</interfacename>, 
+        	<interfacename>com.vaadin.data.Item</interfacename>, and <interfacename>com.vaadin.data.Property</interfacename> 
+        	interfaces. It depends directly on <link xl:href="http://chemistry.apache.org/">Apache Chemistry</link>, the
+        	Java CMIS project that is now also used by Alfresco's repository in its CMIS service implementation.
+        	
+        </para>
+
+        <para>
+            A section can have multiple paragraphs. You can do formatting using pre-defined styles such as
+            <classname>MyClass&lt;T&gt;</classname>, <interfacename>@NotNull</interfacename> etc. 
+        </para>
+        
+        <para>
+            Program listings can also be included in the documentation:
+            
+            <programlisting language="java"><![CDATA[
+import mypackage.*;
+
+public class MyClass {
+    // ... listing here
+}
+                ]]></programlisting>
+        </para>
+    </section>
+
+    <section xml:id="another_section">
+        <title>Another section</title>
+        <para>
+            You can link from one section to another: <xref linkend="usage"/>.
+        </para>
+    </section>
+
+</article>
