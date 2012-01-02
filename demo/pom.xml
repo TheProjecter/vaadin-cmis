@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.fatminds</groupId>
+    <artifactId>vaadin-cmis-integration-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../parent/pom.xml</relativePath>
+  </parent>
+  <groupId>com.fatminds</groupId>
+  <artifactId>vaadin-cmis-integration-demo</artifactId>
+  <packaging>war</packaging>
+  <name>vaadin-cmis-integration - Demo</name>
+  <description>vaadin-cmis-integration add-on demo</description>
+  
+	<properties>
+
+	  	<!-- CMIS properties -->
+		<cmis.protocol>http</cmis.protocol>
+		<cmis.port>8090</cmis.port>
+	  	<cmis.hostname>dev2-instance.fatminds.com</cmis.hostname>
+		<cmis.username>admin</cmis.username>
+		<cmis.password>fatm1nds</cmis.password>
+
+		<!-- Dependency versions -->
+	    <vaadin.version>6.6.6</vaadin.version>
+	    <gwt.version>2.3.0</gwt.version>
+	    <gwt.plugin.version>2.3.0</gwt.plugin.version>
+	    <spring.version>3.0.6.RELEASE</spring.version>
+	    <spring-security.version>3.0.6.RELEASE</spring-security.version>
+	    <aspectj.version>1.6.11</aspectj.version>
+	    <aspectj-maven-plugin.version>1.4</aspectj-maven-plugin.version>
+	    <slf4j.version>1.6.1</slf4j.version>
+	    <vaadin-maven-plugin.version>1.0.2</vaadin-maven-plugin.version>
+	    <jetty.version>8.0.0.v20110901</jetty.version>
+	    <mortar.version>1.0.0</mortar.version>
+	    <shiro.version>1.2.0-SNAPSHOT</shiro.version>
+	    <servlet-api.version>3.0-alpha-1</servlet-api.version>
+	    <jsp-api.version>2.2</jsp-api.version>
+	    <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+	    <maven-resources-plugin.version>2.4.3</maven-resources-plugin.version>
+	    <maven-javadoc-plugin.version>2.3.2</maven-javadoc-plugin.version>
+
+
+	</properties>
+
+
+  <dependencies>
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjrt</artifactId>
+		<version>1.6.11</version>
+	</dependency>
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjweaver</artifactId>
+		<version>1.6.11</version>
+	</dependency>
+   <dependency>
+    	<groupId>org.slf4j</groupId>
+     	<artifactId>slf4j-api</artifactId>
+     	<version>1.6.4</version>
+ 	</dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.6.4</version>
+  </dependency>
+     <dependency>
+      <groupId>com.vaadin</groupId>
+      <artifactId>vaadin</artifactId>
+      <version>${vaadin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fatminds</groupId>
+      <artifactId>vaadin-cmis-integration-addon</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-io</artifactId>
+		<version>1.3.2</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.dellroad</groupId>
+	    <artifactId>dellroad-stuff</artifactId>
+	    <version>1.0.189</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/lib/dellroad-stuff-1.0.189.jar</systemPath>
+	</dependency>
+	
+  </dependencies>
+  
+
+  <build>
+ 
+ 	<!-- Filter properties files -->
+  	<resources>
+		<resource>
+	        <directory>src/main/resources</directory>
+	        <filtering>true</filtering>
+      	</resource>
+    </resources>
+ 
+     <plugins>
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>aspectj-maven-plugin</artifactId>
+          <version>${aspectj-maven-plugin.version}</version>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+            <XnoInline>true</XnoInline>
+	          <weaveDependencies>
+	            <weaveDependency>
+	              <groupId>com.fatminds</groupId>
+	              <artifactId>vaadin-cmis-integration-addon</artifactId>
+		         </weaveDependency>
+	          </weaveDependencies>
+          <aspectLibraries>
+              <aspectLibrary>
+                <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            </aspectLibrary>
+          </aspectLibraries>
+          <showWeaveInfo>true</showWeaveInfo>
+          </configuration> 
+          <executions>
+              <execution>
+                  <goals>
+                      <goal>compile</goal>      
+                      <goal>test-compile</goal>  
+                  </goals>
+              </execution>
+         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+	<version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+	<version>${maven-resources-plugin.version}</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+	<version>${maven-javadoc-plugin.version}</version>
+        <configuration>
+          <links>
+            <link>http://vaadin.com/api/</link>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+            <link>http://java.sun.com/javaee/5/docs/api/</link>
+          </links>
+          <encoding>UTF-8</encoding>
+          <source>1.5</source>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+ 		<plugin>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty-maven-plugin</artifactId>
+			<version>${jetty.version}</version>
+			<configuration>
+				<scanIntervalSeconds>1</scanIntervalSeconds>
+				<stopPort>9977</stopPort>
+				<stopKey>foo</stopKey>
+				<webAppConfig>
+					<contextPath>/</contextPath>
+		            <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
+              			<!-- Workaround for Maven/Jetty issue http://jira.codehaus.org/browse/JETTY-680 -->
+              			<!-- <resources>src/main/webapp,${project.build.directory}/${project.build.finalName}</resources> -->
+              			<resourcesAsCSV>src/main/webapp,${project.build.directory}/${project.build.finalName}</resourcesAsCSV>
+            		</baseResource>
+				</webAppConfig>
+				<connectors>
+					<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+						<port>8180</port>
+					</connector>
+				</connectors>
+				<!-- Does not work with vaadin. need to recreate the war everytime
+				<scanTargets>
+					<scanTarget>src/main/webapp</scanTarget>
+				</scanTargets> -->
+			</configuration>
+		</plugin>
+    </plugins>
+  </build>
+
+</project>

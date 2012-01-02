@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:jee="http://www.springframework.org/schema/jee" xmlns:util="http://www.springframework.org/schema/util"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+       
+	<!-- load default properties -->
+	<context:property-placeholder location="classpath:demo.properties" />
+	<!-- for @Value support -->
+	<util:properties id="props" location="classpath:demo.properties"/>
+    <!-- Activate Spring annotation support -->
+    <context:annotation-config/>
+	<context:spring-configured/>
+    <context:component-scan base-package="com.fatminds" />
+	<!-- Turn on @Autowired, @PostConstruct etc support -->
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+
+	<!-- Enable the "vaadinApplication" custom scope -->
+	<bean class="org.dellroad.stuff.vaadin.VaadinApplicationScope"/>
+	
+    <!-- CMIS Session Factory 
+    	Properties are set demo.properties, and twiddled/filtered by maven during process-resources
+    -->
+    <bean 
+    	id="cmisDataSource" 
+    	class="com.fatminds.cmis.AlfrescoCmisSessionDataSource"
+    	scope="singleton">
+    	<property name="protocol" 	value="${cmis.protocol}"	/>
+    	<property name="port" 		value="${cmis.port}"	/>
+    	<property name="hostname" 	value="${cmis.hostname}"	/>
+    	<property name="username" 	value="${cmis.username}"	/>
+    	<property name="password" 	value="${cmis.password}"	/>    	
+    </bean>
+    	
+    <!-- CMIS Session -->
+	<bean
+		id="cmisSession"
+		factory-bean="cmisDataSource"
+		factory-method="getSession"
+		scope="vaadinApplication">
+	</bean>
+
+</beans>
