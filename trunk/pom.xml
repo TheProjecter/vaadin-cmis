@@ -22,6 +22,7 @@
     <module>manual</module>
   </modules>
   
+  
   <build>
     <plugins>
       <!-- Build a ZIP package for the Vaadin add-on, including documentation etc. -->
