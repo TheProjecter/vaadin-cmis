@@ -17,11 +17,15 @@
 	<properties>
 
 	  	<!-- CMIS properties -->
+		<!-- This machinery wants an Alfresco 3.4.x repository. It has not been tested,
+		     but very well may work, with both the community 3.4 series and the 4.x series that
+		     has just (Jan 2012) been released. 
+		--->
 		<cmis.protocol>http</cmis.protocol>
-		<cmis.port>8090</cmis.port>
-	  	<cmis.hostname>dev2-instance.fatminds.com</cmis.hostname>
+		<cmis.port>8080</cmis.port>
+	  	<cmis.hostname>localhost</cmis.hostname>
 		<cmis.username>admin</cmis.username>
-		<cmis.password>fatm1nds</cmis.password>
+		<cmis.password>admin</cmis.password>
 
 		<!-- Dependency versions -->
 	    <vaadin.version>6.6.6</vaadin.version>
