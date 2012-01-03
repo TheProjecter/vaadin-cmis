@@ -19,7 +19,7 @@
 		<!-- This machinery wants an Alfresco 3.4.x repository. It has not been tested,
 		     but very well may work, with both the community 3.4 series and the 4.x series that
 		     has just (Jan 2012) been released. 
-		--->
+		-->
 		<cmis.protocol>http</cmis.protocol>
 		<cmis.port>8080</cmis.port>
 	  	<cmis.hostname>localhost</cmis.hostname>
