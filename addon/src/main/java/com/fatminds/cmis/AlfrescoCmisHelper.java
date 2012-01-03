@@ -45,6 +45,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.util.StringUtils;
 
 
 import java.util.GregorianCalendar;
@@ -56,7 +57,23 @@ public class AlfrescoCmisHelper {
 	protected static final ObjectMapper mapper = new ObjectMapper();
 	
 	public static final String ALF_DICT_API_BASE =  "/alfresco/service/api/classes/";
+	
+	public static final String DASH_SEP_STRING = "---";
 
+	public static String[] splitTrimString(String in, String splitBy){
+		if (!StringUtils.hasText(in) || !StringUtils.hasText(splitBy)){
+			return new String[]{};
+		}
+		String[] tokens = in.split(splitBy);
+		if (null == tokens){
+			return new String[]{};
+		}
+		for (int i=0; i<tokens.length; i++){
+			tokens[i] = tokens[i].trim();
+		}
+		return tokens;
+	}
+	
 	
 	public static GregorianCalendar attemptDateParse(String inVal) {
 		if (null == inVal || inVal.length() < 1)
