@@ -5,10 +5,9 @@
   <parent>
     <groupId>com.fatminds</groupId>
     <artifactId>vaadin-cmis-integration-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
-  <groupId>com.fatminds</groupId>
   <artifactId>vaadin-cmis-integration-demo</artifactId>
   <packaging>war</packaging>
   <name>vaadin-cmis-integration - Demo</name>
