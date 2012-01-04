@@ -3,18 +3,10 @@
  */
 package com.fatminds.cmis.form;
 
-/**
- * @author aaron@fatminds.com
- *
- */
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +31,6 @@ import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
