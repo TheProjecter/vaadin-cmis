@@ -39,7 +39,7 @@ public class CmisForm extends Form implements ClickListener  {
 	
 	private static final Logger log = LoggerFactory.getLogger(CmisForm.class);
 	
-	protected Button save = new Button("Save", (ClickListener) this);
+	protected final Button save = new Button("Save", (ClickListener) this);
 	//protected Button edit = new Button("Edit", (ClickListener) this);
   
 	protected boolean cmisObjectExists = false;
@@ -122,10 +122,6 @@ public class CmisForm extends Form implements ClickListener  {
 	    setFooter(footer);
 	    getFooter().setVisible(false);
        }
-
-
-	
-	
     
     /*
      * Override to get control over where fields are placed.

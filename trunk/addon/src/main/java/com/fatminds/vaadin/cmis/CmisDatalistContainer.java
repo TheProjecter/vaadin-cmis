@@ -93,7 +93,7 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 			log.info("Creating F:dl:dataList " + rootPath);
 			Map<String, String> props = new HashMap<String, String>();
 			props.put("cmis:name", AlfrescoCmisHelper.alfModelToApiClassname(propertyId.toString()));
-	    	props.put(PropertyIds.OBJECT_TYPE_ID, "F:dl:dataList");
+	    	props.put(PropertyIds.OBJECT_TYPE_ID, "F:fmbase:simplelist");
 			root = f.createFolder(props);
 			log.info("Created dl:dataList " + root.getName() + " under parent folder " + f.getName());			
 		}
