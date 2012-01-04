@@ -4,7 +4,7 @@
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:xl="http://www.w3.org/1999/xlink">
     <info>
-        <title>Vaadin-CMIS-Alfresco integration toolkit 0.0.1 Manual</title>
+        <title>Vaadin-CMIS-Alfresco integration toolkit user manual</title>
         <author>
             <personname>
                 <firstname>Aaron</firstname>
@@ -14,35 +14,51 @@
         </author>
         <copyright>
             <year>2010-2012</year>
-            <holder>my organization</holder>
+            <holder>Fatminds, Inc</holder>
         </copyright>
     </info>
 
     <section xml:id="introduction">
         <title>Introduction</title>
         <para>
-            This toolkit, the Vaadin-CMIS(-Alfresco) or "VC" integration was created by <link xl:href="http://fatminds.com">Fatminds</link> and 
+            This toolkit, the Vaadin-CMIS-Alfresco or "VC" integration, was created by <link xl:href="http://fatminds.com">Fatminds</link> and 
             <link xl:href="http://drivedev.com">DriveDev</link>.
        	</para>
        	
 		<para>
-			VC was created to enable rapid implementation of high-quality browser-based applications that leverage the capabilities of
-			modern CMIS content repositories. We're an Alfresco shop, so this implementation has focused first on those features of Alfresco
-			that are <link xl:href="http://wiki.alfresco.com/wiki/CMIS_Model_Mapping">reachable over CMIS</link>*, and on providing a 
-			mostly automatic binding between them and standard Vaadin UI interfaces.
+			We think that the combination of Alfresco's repository services and flexible custom content model, CMIS's strong dictionary 
+			support, and Vaadin's remarkably powerful server-side web application framework create opportunity for very high development
+			productivity around complex content-oriented applications.
+			
+			This initial release provides basic connectivity between Vaadin UI components and CMIS repository data and services. 
+			It is, first and foremost, incomplete; the missing features list is much longer than the other one. However lacking, 
+			it is being busily extended with all of the energy and love we can muster. 						
         </para>
-        
-    </section>
-
-    <section xml:id="usage">
-        <title>Using VC</title>
         <para>
+			VC focuses, though not exclusively, first on those features of Alfresco
+			that are <link xl:href="http://wiki.alfresco.com/wiki/CMIS_Model_Mapping">reachable over CMIS</link>*, and on providing a 
+			mostly automatic binding between them and Vaadin's UI data model.
+
         	VC implements the Vaadin <interfacename>com.vaadin.data.Container</interfacename>, 
         	<interfacename>com.vaadin.data.Item</interfacename>, and <interfacename>com.vaadin.data.Property</interfacename> 
         	interfaces. It depends directly on <link xl:href="http://chemistry.apache.org/">Apache Chemistry</link>, the
         	Java CMIS project that is now also used by Alfresco's repository in its CMIS service implementation.
         	
+        	VC depends heavily on the CMIS dictionary to implement its do-the-right-thing personality; fields, lists, tables, forms and other
+        	Cmis-ified components will attempt reasonable defaults based on the dictionary definitions your application uses. Thusly,
+        	at least in Alfresco-world, a custom content model (incl descendants of cm:content and cmis:folder) is required to do much
+        	of anything. 
         </para>
+
+		<para>
+			The demo application depends on the excellent <link xl:href="http://code.google.com/p/dellroad-stuff">dellroad</link> toolkit,
+			and both the library and demo depend on Spring. 
+		</para>
+        
+    </section>
+
+    <section xml:id="usage">
+        <title>Using VC</title>
 
         <para>
             A section can have multiple paragraphs. You can do formatting using pre-defined styles such as
@@ -53,10 +69,6 @@
             Program listings can also be included in the documentation:
             
             <programlisting language="java"><![CDATA[
-import mypackage.*;
-
-public class MyClass {
-    // ... listing here
 }
                 ]]></programlisting>
         </para>

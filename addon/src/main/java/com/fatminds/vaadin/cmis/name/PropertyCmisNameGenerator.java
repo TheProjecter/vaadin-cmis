@@ -15,7 +15,7 @@ import com.vaadin.ui.Form;
  * @author aaronlee
  *
  */
-public class PropertyCmisNameGenerator implements CmisNameGenerator {
+public class PropertyCmisNameGenerator implements CmisNameGenerator{
 
 	protected String[] propNames;
 	/**

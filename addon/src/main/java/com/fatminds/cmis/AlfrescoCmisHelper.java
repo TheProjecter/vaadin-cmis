@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,21 +34,15 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.DateTimeFormat;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.util.StringUtils;
 
-
-import java.util.GregorianCalendar;
+import com.fatminds.cmis.AlfrescoCmisSessionDataSource;
 
 public class AlfrescoCmisHelper {
 
@@ -613,6 +607,7 @@ public class AlfrescoCmisHelper {
         }
         return new AlfrescoCmisTypeInfo(cmisType, cmisTypeIdWithAspects, returnProps);
 	}
+
 
 	
 }

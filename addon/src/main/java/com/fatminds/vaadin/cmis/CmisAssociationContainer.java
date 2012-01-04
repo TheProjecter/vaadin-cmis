@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.fatminds.cmis.AlfrescoCmisHelper;
+import com.fatminds.cmis.AlfrescoCmisSessionDataSource;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractInMemoryContainer;
 
