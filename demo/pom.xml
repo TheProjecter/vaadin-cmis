@@ -211,7 +211,7 @@
 				</webAppConfig>
 				<connectors>
 					<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-						<port>8180</port>
+						<port>8080</port>
 					</connector>
 				</connectors>
 				<!-- Does not work with vaadin. need to recreate the war everytime
