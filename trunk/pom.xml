@@ -16,7 +16,8 @@
   </properties>
   
   <modules>
-    <module>parent</module>
+    <!--test-->
+	<module>parent</module>
     <module>addon</module>
     <module>demo</module>
     <module>manual</module>
