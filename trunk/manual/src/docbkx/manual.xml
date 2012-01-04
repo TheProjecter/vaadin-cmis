@@ -21,64 +21,274 @@
     <section xml:id="introduction">
         <title>Introduction</title>
         <para>
-            This toolkit, the Vaadin-CMIS-Alfresco or "VC" integration, was created by <link xl:href="http://fatminds.com">Fatminds</link> and 
+            The CMIS toolkit for Vaadin (CTV) is maintained by <link xl:href="http://fatminds.com">Fatminds</link> and 
             <link xl:href="http://drivedev.com">DriveDev</link>.
+            
+            DISCLAIMER: This is very early, and totally unsupported work. I wouldn't sign off on it in any production environment, yet - 
+            but we're working hard to make it bulletproof and invite you to join us.
+            
+            -- Aaron Jan 2012
        	</para>
        	
 		<para>
-			We think that the combination of Alfresco's repository services and flexible custom content model, CMIS's strong dictionary 
-			support, and Vaadin's remarkably powerful server-side web application framework create opportunity for very high development
-			productivity around complex content-oriented applications.
+			We think that the combination of Alfresco's repository services, CMIS's strong dictionary 
+			support, and Vaadin's remarkably powerful server-side web application framework are an opportunity to
+			generate an ongoing string of wins product wins in many content-focused applications.
 			
-			This initial release provides basic connectivity between Vaadin UI components and CMIS repository data and services. 
+			This alpha work provides basic connectivity between Vaadin UI components and CMIS repository data and services. 
 			It is, first and foremost, incomplete; the missing features list is much longer than the other one. However lacking, 
-			it is being busily extended with all of the energy and love we can muster. 						
+			it is being busily extended with all of the energy and love we can muster.
         </para>
         <para>
-			VC focuses, though not exclusively, first on those features of Alfresco
+			Version 0.0.2 focuses on those features of Alfresco
 			that are <link xl:href="http://wiki.alfresco.com/wiki/CMIS_Model_Mapping">reachable over CMIS</link>*, and on providing a 
-			mostly automatic binding between them and Vaadin's UI data model.
+			mostly automatic binding between them and Vaadin's <link xl:href="https://vaadin.com/book/-/page/datamodel.html">UI data model</link>.
 
-        	VC implements the Vaadin <interfacename>com.vaadin.data.Container</interfacename>, 
-        	<interfacename>com.vaadin.data.Item</interfacename>, and <interfacename>com.vaadin.data.Property</interfacename> 
-        	interfaces. It depends directly on <link xl:href="http://chemistry.apache.org/">Apache Chemistry</link>, the
+			CTV depends directly on <link xl:href="http://chemistry.apache.org/">Apache Chemistry</link>, the
         	Java CMIS project that is now also used by Alfresco's repository in its CMIS service implementation.
         	
-        	VC depends heavily on the CMIS dictionary to implement its do-the-right-thing personality; fields, lists, tables, forms and other
-        	Cmis-ified components will attempt reasonable defaults based on the dictionary definitions your application uses. Thusly,
-        	at least in Alfresco-world, a custom content model (incl descendants of cm:content and cmis:folder) is required to do much
-        	of anything. 
         </para>
 
 		<para>
 			The demo application depends on the excellent <link xl:href="http://code.google.com/p/dellroad-stuff">dellroad</link> toolkit,
-			and both the library and demo depend on Spring. 
+			and both the library and demo depend on Spring. Your project will need to ensure that compile or load-time weaving takes place
+			as the library makes use of <interfacename>@Configurable</interfacename> and <interfacename>@Autowired</interfacename> to gain
+			access to the CMIS <interfacename>Session</interfacename> and/or <interfacename>AlfrescoCmisSessionDataSource</interfacename>. 
+			You'll need an Alfresco instance to run anything including the demo. See the <xref linkend="environment">using</xref> section.
 		</para>
-        
     </section>
+    
+    <section xml:id="significant_caveats">
+        <title>Significant caveats</title>
+		<para>
+			<itemizedlist>
+				<listitem>
+					<strong>Architecture</strong> - in hindsight (and with some modicum of foresight), it probably would have been better to implement
+					the vaadin com.vaadin.data.Container.Hierarchical interface as well as the non-hierarchical Container interface, since 
+					the Hierarchical model appears to map pretty consistently onto the CMIS content hierarchy structure. 
+					
+					However, we weren't (and aren't) sure about the best ways to expose that hierarchy in a user experience in practice, and what
+					we've tended to end up with are lots of UIs that don't have any respect at all for physical or typed content hierarchy (right?).
+					
+					So we've kept it simple for now. This will be looked at in detail before 0.1.0.
+				</listitem>
+			</itemizedlist>
+		</para>    
+	</section>
 
-    <section xml:id="usage">
-        <title>Using VC</title>
+    <section xml:id="background_motivation">
+        <title>Motivation for CTV</title>
 
         <para>
-            A section can have multiple paragraphs. You can do formatting using pre-defined styles such as
-            <classname>MyClass&lt;T&gt;</classname>, <interfacename>@NotNull</interfacename> etc. 
+        	First, let's suppose that you are here because you wish to expose a hierarchy of content and/or content metadata through a variety of
+        	rich and rewarding user interactions to a population of broadband-connected consumers running up to date hardware and browsers.
+        </para>
+        <para>
+        	Second, let's suppose that you think Vaadin might be a good foundation for your UX. 
+        </para>
+        <para>
+        	Third, let's suppose you've already defined (or inherited) a (CMIS-accessible*) custom content model in an Alfresco instance (3.4+ 
+        	please), and with much brow-furrowing have configured Activiti workflows sufficient to reform the IRS, and that the brilliantly curated 
+        	content now accumulating therein begs for release upon a desirous public. And *you* are now scratching your head about how to get from here to 
+        	there. CTV is the answer.
+        </para>
+    </section>
+        	
+    <section xml:id="environment">
+        <title>Environment setup and configuration</title>
+
+		<para>
+			Note: we're using STS (2.8.1 at time of writing) with Vaadin plugins. 
+			TODO: describe Eclipse plugins and config in detail.
+			TODO: provide example for using svn:externals properties to include CTV trunk in dependent projects.
+		</para>
+
+        <para>
+        	<itemizedlist>
+        		<listitem>
+					Once you have downloaded and built the project, you'll have a SNAPSHOT version of the library jar installed in the 
+					local maven repository. You can then include and resolve the dependency.
+            <programlisting language="xml"><![CDATA[
+<!-- Vaadin-Alfresco-CMIS support -->
+<dependency>
+ 	<groupId>com.fatminds</groupId>
+ 	<artifactId>vaadin-cmis-integration-addon</artifactId>
+	<version>0.0.2-SNAPSHOT</version>  		
+</dependency>
+                ]]></programlisting>
+        		</listitem>
+
+        		<listitem>
+        		In addition, you'll need to include the aspectj-maven-plugin configuration element "weavedependency" as shown in order
+        		for CTV's <interfacename>@Configurable</interfacename> components to be woven with your project classes. 
+            <programlisting language="xml"><![CDATA[
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>aspectj-maven-plugin</artifactId>
+          <version>${aspectj-maven-plugin.version}</version>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+            <XnoInline>true</XnoInline>
+	          <weaveDependencies>
+	            <weaveDependency>
+	              <groupId>com.fatminds</groupId>
+	              <artifactId>vaadin-cmis-integration-addon</artifactId>
+		         </weaveDependency>
+	          </weaveDependencies>
+          <aspectLibraries>
+              <aspectLibrary>
+                <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            </aspectLibrary>
+          </aspectLibraries>
+          <showWeaveInfo>true</showWeaveInfo>
+          </configuration> 
+          <executions>
+              <execution>
+                  <goals>
+                      <goal>compile</goal>      
+                      <goal>test-compile</goal>  
+                  </goals>
+              </execution>
+         </executions>
+      </plugin>
+                ]]></programlisting>
+        		</listitem>
+	
+				<listitem>
+				You'll need to bind <classname>AlfrescoCmisSessionDataSource</classname> and <classname>Session</classname> in your
+				application's context.
+            <programlisting language="xml"><![CDATA[
+<pom.xml or properties or>
+<cmis.protocol>http</cmis.protocol>
+<cmis.port>8080</cmis.port>
+ 	<cmis.hostname>localhost</cmis.hostname>
+<cmis.username>admin</cmis.username>
+<cmis.password>admin</cmis.password>
+
+
+<applicationContext.xml>
+    <bean 
+    	id="cmisDataSource" 
+    	class="com.fatminds.cmis.AlfrescoCmisSessionDataSource"
+    	scope="singleton">
+    	<property name="protocol" 	value="${cmis.protocol}"	/>
+    	<property name="port" 		value="${cmis.port}"	/>
+    	<property name="hostname" 	value="${cmis.hostname}"	/>
+    	<property name="username" 	value="${cmis.username}"	/>
+    	<property name="password" 	value="${cmis.password}"	/>    	
+    </bean>
+    	
+    <!-- CMIS Session -->
+	<bean
+		id="cmisSession"
+		factory-bean="cmisDataSource"
+		factory-method="getSession"
+		scope="vaadinApplication">
+	</bean>
+                ]]></programlisting>					
+				</listitem>
+				
+        	</itemizedlist>
         </para>
         
         <para>
-            Program listings can also be included in the documentation:
-            
+        	It is assumed, as was mentioned, that you are working with a custom content model. For the purposes of the demo app
+        	and this introduction, we'll just work with the cmis test model that was helpfully packaged with the Alfresco 3.4.x series 
+        	(and probably others) <link xl:href="http://code.google.com/p/alfresco-model-editor/source/browse/trunk/spring-surf-alfresco-embedded/config/alfresco/model/cmisTestModel.xml?r=2">
+        	here</link>.
+        	It should be noted that CTV makes heavy use of the CMIS dictionary (schema) capabilities that are exposed by
+        	Alfresco. The base Alfresco CMIS types don't have any properties, and at least in this author's experience Alfresco will return
+        	null if you try to retrieve their CMIS <interfacename>ObjectType</interfacename>. So, always work with a content model that inherits
+        	from them (so that CTV can retrieve a non-null definition for each) in your implementation. 
+            <programlisting language="xml"><![CDATA[
+<model name="cmiscustom:model" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+    <types>
+      <type name="cmiscustom:folder">
+         <title>Custom Folder</title>
+         <parent>cm:folder</parent>
+         <properties>
+            <property name="cmiscustom:folderprop_string">
+                <title>Custom Folder Property (string)</title>
+                <type>d:text</type>
+            </property>
+         </properties>
+      </type>
+    
+      <type name="cmiscustom:document">
+         <title>Custom Document</title>
+         <parent>cm:content</parent>
+         <properties>
+            <property name="cmiscustom:docprop_string">
+                <title>Custom Document Property (string)</title>
+                <type>d:text</type>
+            </property>
+            <property name="cmiscustom:docprop_boolean_multi">
+                <title>Custom Document Property (multi-valued boolean)</title>
+                <type>d:boolean</type>
+                <multiple>true</multiple>
+            </property>
+            <property name="cmiscustom:docprop_datetime">
+                <title>Custom Document Property (datetime)</title>
+                <type>d:datetime</type>
+            </property>
+                ]]></programlisting>
+        </para>
+        </section>
+        
+
+    <section xml:id="using">
+        <title>Basic Usage</title>
+        <para>
+        	The basic unit of configuration is the <classname>CmisContainer</classname>. It represents a folder in a content (path) 
+        	hierarchy, and provides access to all children (not all descendants) of its parent folder, and allows (under the right 
+        	circumstances) for object creation, update, and delete. It CRUDs and manages a folder of CmisItems, which are both a transient
+        	proxy for underlying CmisObjects (Documents or folders, one type per CmisContainer) and manager of CmisProperty's that are
+        	used by Vaadin's <interfacename>Field</interfacename> to get and set data. 
+        </para>
+        <para>
+        	To set up a simple application that allows you to upload text files to Alfresco, list, edit content, edit property values, and delete them, you might start
+        	with a Vaadin composite component drawn in the UI editor that looks like <link xl:href="http://screencast.com/t/we1oRbgAx">this</link>. To get started, you
+        	would get or create a reference to the Folder that will be holding all of your uploaded Documents, and create a CmisContainer on it. 
             <programlisting language="java"><![CDATA[
-}
+        // Upload list container
+        CmisContainer<Document> docs = new CmisContainer<Document>(
+        		// Include aspects ONLY if not specified as <mandatory-aspects> in Alfresco model (these are picked up automagically)
+        		"D:cmiscustom:document", 
+        		// All objects managed by this CmisContainer will have this folder as parent
+        		getDemoFolder(), 
+        		Document.class,
+        		// Pagination off (lazy-loading on)
+        		0,
+        		// Specify ordering of container contents using CMISSQL
+        		"cmis:name ASC");
+        docs.initContainerProperties();
+        docs.populate();
+        return docs;
                 ]]></programlisting>
         </para>
     </section>
-
-    <section xml:id="another_section">
-        <title>Another section</title>
-        <para>
-            You can link from one section to another: <xref linkend="usage"/>.
-        </para>
-    </section>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 </article>
