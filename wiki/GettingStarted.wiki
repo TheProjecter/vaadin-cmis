@@ -1,0 +1,9 @@
+#How to set up and run the demo app
+
+= Introduction =
+
+After following these instructions, you should be able to run the demo app. 
+
+= Details =
+
+TODO
