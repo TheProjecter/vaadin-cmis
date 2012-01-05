@@ -21,10 +21,10 @@
 		     has just (Jan 2012) been released. 
 		-->
 		<cmis.protocol>http</cmis.protocol>
-		<cmis.port>8080</cmis.port>
-	  	<cmis.hostname>localhost</cmis.hostname>
+		<cmis.port>8090</cmis.port>
+	  	<cmis.hostname>content.fatminds.com</cmis.hostname>
 		<cmis.username>admin</cmis.username>
-		<cmis.password>admin</cmis.password>
+		<cmis.password>fatm1nds</cmis.password>
 
 		<!-- Dependency versions -->
 	    <vaadin.version>6.6.6</vaadin.version>
