@@ -148,9 +148,10 @@ public class CmisForm extends Form implements ClickListener  {
     		field.setCaption(caption);
     		if (replaceComponent instanceof AbstractTextField){
     			String inputPrompt = ((AbstractTextField)replaceComponent).getInputPrompt();
-    			if (inputPrompt != null && !inputPrompt.equals("")){
-    				((AbstractTextField)field).setInputPrompt(inputPrompt);
+    			if (inputPrompt == null){
+    				inputPrompt = "";
     			}
+				((AbstractTextField)field).setInputPrompt(inputPrompt);
     		}
     		if (caption == null || caption.equals("") ){
     			caption = field.getCaption();
