@@ -28,7 +28,11 @@ public class UrlValidator extends AbstractValidator{
         if (!(value instanceof String)) {
         	throw new IllegalArgumentException("UrlValidator expects String input, got a " + value.getClass());
         }
-        return urlValidator.isValid((String) value);
+        String url = (String)value;
+        if (!url.startsWith("http")){
+        	url = "http://" + url;
+        }
+        return urlValidator.isValid(url);
     }
 
     // Upon failure, the validate() method throws an exception

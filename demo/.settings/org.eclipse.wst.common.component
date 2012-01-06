@@ -3,7 +3,6 @@
     <wb-module deploy-name="vaadin-cmis-integration-demo">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <dependent-module archiveName="vaadin-cmis-integration-addon-0.0.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/vaadin-cmis-integration-addon-0.0.1-SNAPSHOT/vaadin-cmis-integration-addon-0.0.1-SNAPSHOT">
             <dependency-type>uses</dependency-type>
