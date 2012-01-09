@@ -11,7 +11,7 @@
   <artifactId>vaadin-cmis-integration-addon</artifactId>
   <packaging>jar</packaging>
   <name>vaadin-cmis-integration - Addon</name>
-  <description>vaadin-cmis-integration add-on</description>
+  <description>vaadin-cmis-integration add-on </description>
 
   <dependencies>
 
