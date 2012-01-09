@@ -21,30 +21,10 @@
 		     has just (Jan 2012) been released. 
 		-->
 		<cmis.protocol>http</cmis.protocol>
-		<cmis.port>8090</cmis.port>
-	  	<cmis.hostname>content.fatminds.com</cmis.hostname>
+		<cmis.port>8080</cmis.port>
+	  	<cmis.hostname>localhost</cmis.hostname>
 		<cmis.username>admin</cmis.username>
-		<cmis.password>fatm1nds</cmis.password>
-
-		<!-- Dependency versions -->
-	    <vaadin.version>6.6.6</vaadin.version>
-	    <gwt.version>2.3.0</gwt.version>
-	    <gwt.plugin.version>2.3.0</gwt.plugin.version>
-	    <spring.version>3.0.6.RELEASE</spring.version>
-	    <spring-security.version>3.0.6.RELEASE</spring-security.version>
-	    <aspectj.version>1.6.11</aspectj.version>
-	    <aspectj-maven-plugin.version>1.4</aspectj-maven-plugin.version>
-	    <slf4j.version>1.6.1</slf4j.version>
-	    <vaadin-maven-plugin.version>1.0.2</vaadin-maven-plugin.version>
-	    <jetty.version>8.0.0.v20110901</jetty.version>
-	    <mortar.version>1.0.0</mortar.version>
-	    <shiro.version>1.2.0-SNAPSHOT</shiro.version>
-	    <servlet-api.version>3.0-alpha-1</servlet-api.version>
-	    <jsp-api.version>2.2</jsp-api.version>
-	    <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
-	    <maven-resources-plugin.version>2.4.3</maven-resources-plugin.version>
-	    <maven-javadoc-plugin.version>2.4.3</maven-javadoc-plugin.version>
-
+		<cmis.password>CHANGETHIS</cmis.password>
 
 	</properties>
 
