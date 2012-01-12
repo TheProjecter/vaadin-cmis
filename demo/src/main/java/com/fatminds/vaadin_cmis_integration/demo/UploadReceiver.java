@@ -35,6 +35,8 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
+import org.dellroad.stuff.vaadin.ContextApplication;
+import org.dellroad.stuff.vaadin.SpringContextApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.StringUtils;
@@ -43,6 +45,7 @@ import com.fatminds.vaadin.cmis.CmisContainer;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
+import com.vaadin.ui.Window.Notification;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +71,11 @@ public class UploadReceiver implements Upload.SucceededListener, Upload.FailedLi
 	protected String filename;
 	protected String mimeType;
 	
+	/**
+	 * Reference to containing application (for {@link ContextApplication#invoke})
+	 */
+	protected ContextApplication theApp;
+	
 	
 	/**
 	 * The cmis type id and (if applicable), comma-separated aspects to apply
@@ -86,7 +94,7 @@ public class UploadReceiver implements Upload.SucceededListener, Upload.FailedLi
 	 * -- Note, at least in this example, your CMIS type needs to include ',P:cm:titled', because this UploadReceiver will attempt
 	 * to set the cm:title property (to the filename, same as the cmis:name) on creation. 
 	 */
-	public UploadReceiver(String cmisTypeAndAspects, Folder uploadRoot, CmisContainer<?> uploadContainer) {
+	public UploadReceiver(String cmisTypeAndAspects, Folder uploadRoot, CmisContainer<?> uploadContainer, ContextApplication theApp) {
 		if (!StringUtils.hasText(cmisTypeAndAspects)) {
 			throw new IllegalArgumentException("cmisTypeAndAspects cannot be null");
 		}
@@ -99,6 +107,7 @@ public class UploadReceiver implements Upload.SucceededListener, Upload.FailedLi
 			this.uploadContainer = uploadContainer;
 		}
 		this.uploadContainer = uploadContainer;
+		this.theApp = theApp;
 		init();
 	}
 
@@ -130,8 +139,17 @@ public class UploadReceiver implements Upload.SucceededListener, Upload.FailedLi
     	return buffer;
 	}
 
-	public void uploadFailed(FailedEvent event) {
+	public void uploadFailed(final FailedEvent event) {
 		log.warn("Upload of " + event.getFilename() + " failed because: " + event.getReason());
+		if (null != theApp){
+			theApp.invoke(new Runnable() {
+				
+				@Override
+				public void run() {
+					SpringContextApplication.get().getMainWindow().showNotification("Upload failed: " + event.getReason(), Notification.TYPE_WARNING_MESSAGE);
+				}
+			});
+		}
 		buffer.reset();
 	}
 
@@ -182,6 +200,16 @@ public class UploadReceiver implements Upload.SucceededListener, Upload.FailedLi
 		}
 		if (null != this.uploadContainer) {
 			this.uploadContainer.refresh();
+		}
+		if (null != theApp){
+			theApp.invoke(new Runnable() {
+				
+				@Override
+				public void run() {
+					SpringContextApplication.get().getMainWindow()
+						.showNotification("Upload succeeded", Notification.TYPE_TRAY_NOTIFICATION);
+				}
+			});
 		}
 		log.info("Upload to alfresco succeeded, document ID " + newDoc.getId() );
 		buffer.reset();
