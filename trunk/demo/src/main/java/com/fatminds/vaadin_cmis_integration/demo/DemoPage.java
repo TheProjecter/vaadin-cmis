@@ -32,6 +32,7 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 import org.apache.commons.io.IOUtils;
+import org.dellroad.stuff.vaadin.ContextApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -252,7 +253,7 @@ public class DemoPage extends CustomComponent {
 	protected void setupUploadReceiver(CmisContainer<?> docs){
 		// Set up upload handler
 		// Note, ur refreshes the container (and thereby the list) when an upload succeeds
-        final UploadReceiver ur = new UploadReceiver("D:cmiscustom:document", docs.getRootFolder(), docs);
+        final UploadReceiver ur = new UploadReceiver("D:cmiscustom:document", docs.getRootFolder(), docs, ContextApplication.get());
         upload_1.setReceiver(ur);
 		upload_1.addListener((Upload.SucceededListener)ur);
 		upload_1.addListener((Upload.FailedListener)ur);

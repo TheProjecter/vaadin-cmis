@@ -36,10 +36,10 @@
 		     has just (Jan 2012) been released. 
 		-->
 		<cmis.protocol>http</cmis.protocol>
-		<cmis.port>8080</cmis.port>
-	  	<cmis.hostname>localhost</cmis.hostname>
+		<cmis.port>8090</cmis.port>
+	  	<cmis.hostname>dev2-instance.fatminds.com</cmis.hostname>
 		<cmis.username>admin</cmis.username>
-		<cmis.password>CHANGETHIS</cmis.password>
+		<cmis.password>fatm1nds</cmis.password>
 
 	</properties>
 
