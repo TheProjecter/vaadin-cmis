@@ -16,6 +16,7 @@
 package com.fatminds.cmis;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -30,18 +31,17 @@ import java.util.Set;
 
 import org.alfresco.cmis.client.AlfrescoAspects;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.apache.chemistry.opencmis.client.api.ObjectType;
 import org.apache.chemistry.opencmis.client.api.OperationContext;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.runtime.ObjectIdImpl;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.definitions.PropertyDefinition;
 import org.apache.chemistry.opencmis.commons.enums.Cardinality;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.PropertyType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -55,13 +55,17 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.util.StringUtils;
 
-import com.fatminds.cmis.AlfrescoCmisSessionDataSource;
+import com.esotericsoftware.yamlbeans.YamlReader;
+import com.fatminds.cmis.AlfrescoCmisHelper.AlfrescoCmisTypeInfo;
 
 public class AlfrescoCmisHelper {
 
-	private static final Log log = LogFactory.getLog(AlfrescoCmisHelper.class);
+	private static final Logger log = LoggerFactory.getLogger(AlfrescoCmisHelper.class);
 	
 	protected static final ObjectMapper mapper = new ObjectMapper();
 	
@@ -356,7 +360,7 @@ public class AlfrescoCmisHelper {
            if (resp.getStatusLine().getStatusCode() != 200) {
         	   throw new RuntimeException("Get failed, can't build JsonNode because: " + resp.getStatusLine().getReasonPhrase());
            }
-           HttpEntity entity = resp.getEntity();
+           org.apache.http.HttpEntity entity = resp.getEntity();
            return mapper.readValue(entity.getContent(), JsonNode.class);
 		}
 		finally {
@@ -623,7 +627,27 @@ public class AlfrescoCmisHelper {
         return new AlfrescoCmisTypeInfo(cmisType, cmisTypeIdWithAspects, returnProps);
 	}
 
-
+	/**
+	 * Returns list of objects defined in YML file
+	 * @param yamlBinding
+	 * @return
+	 */
+	public static Map<?,?> readYamlObjectMap(Document yamlBinding){
+		ContentStream cs = yamlBinding.getContentStream();
+		if (null == cs || 0 == cs.getLength()) {
+			throw new RuntimeException("Cannot find any yaml configuration (cm:content) in " + yamlBinding.getName());
+		}
+		Map bindings;
+		try {
+			InputStreamReader isr = new InputStreamReader(cs.getStream());
+			YamlReader reader = new YamlReader(isr);
+			bindings = (Map)reader.read();
+		}
+		catch (Exception e){
+			throw new RuntimeException("Can't get DataBinding from yaml binding " + yamlBinding.getName() + ", " + e.getMessage());
+		}
+		return bindings;
+	}
 	
 }
 
