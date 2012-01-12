@@ -84,9 +84,7 @@
 	<dependency>
 	    <groupId>org.dellroad</groupId>
 	    <artifactId>dellroad-stuff</artifactId>
-	    <version>1.0.189</version>
-	    <scope>system</scope>
-	    <systemPath>${project.basedir}/lib/dellroad-stuff-1.0.189.jar</systemPath>
+	    <version>1.0.207</version>
 	</dependency>
 	
   </dependencies>
