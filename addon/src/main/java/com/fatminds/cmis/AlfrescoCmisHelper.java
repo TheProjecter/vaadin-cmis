@@ -60,9 +60,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.util.StringUtils;
 
-import com.esotericsoftware.yamlbeans.YamlReader;
-import com.fatminds.cmis.AlfrescoCmisHelper.AlfrescoCmisTypeInfo;
-
 public class AlfrescoCmisHelper {
 
 	private static final Logger log = LoggerFactory.getLogger(AlfrescoCmisHelper.class);
@@ -627,27 +624,5 @@ public class AlfrescoCmisHelper {
         return new AlfrescoCmisTypeInfo(cmisType, cmisTypeIdWithAspects, returnProps);
 	}
 
-	/**
-	 * Returns list of objects defined in YML file
-	 * @param yamlBinding
-	 * @return
-	 */
-	public static Map<?,?> readYamlObjectMap(Document yamlBinding){
-		ContentStream cs = yamlBinding.getContentStream();
-		if (null == cs || 0 == cs.getLength()) {
-			throw new RuntimeException("Cannot find any yaml configuration (cm:content) in " + yamlBinding.getName());
-		}
-		Map bindings;
-		try {
-			InputStreamReader isr = new InputStreamReader(cs.getStream());
-			YamlReader reader = new YamlReader(isr);
-			bindings = (Map)reader.read();
-		}
-		catch (Exception e){
-			throw new RuntimeException("Can't get DataBinding from yaml binding " + yamlBinding.getName() + ", " + e.getMessage());
-		}
-		return bindings;
-	}
-	
 }
 
