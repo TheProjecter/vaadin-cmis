@@ -15,6 +15,9 @@
  ******************************************************************************/
 package com.fatminds.cmis;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
@@ -42,6 +45,7 @@ import org.apache.chemistry.opencmis.commons.definitions.PropertyDefinition;
 import org.apache.chemistry.opencmis.commons.enums.Cardinality;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.PropertyType;
+import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -70,6 +74,15 @@ public class AlfrescoCmisHelper {
 	
 	public static final String DASH_SEP_STRING = "---";
 
+	public static ContentStream getContentStream(File f) throws FileNotFoundException{
+		if (null == f)
+			return null;
+		
+		FileInputStream fis = new FileInputStream(f);
+		ContentStream cs = new ContentStreamImpl(f.getName(), null, "application/excel", fis);
+		return cs;
+	}
+	
 	public static String[] splitTrimString(String in, String splitBy){
 		if (!StringUtils.hasText(in) || !StringUtils.hasText(splitBy)){
 			return new String[]{};
