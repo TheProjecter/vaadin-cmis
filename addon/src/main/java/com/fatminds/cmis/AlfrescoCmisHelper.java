@@ -622,6 +622,14 @@ public class AlfrescoCmisHelper {
         	try {
         		ObjectType policyDef = session.getTypeDefinition(cmisPolicy);
         		Map<String, PropertyDefinition<?>> aspectProps = policyDef.getPropertyDefinitions();
+        		/**
+        		 * So, guess what? If, in your Alfresco content model you have 
+        		 * 	<aspect name="blah:blah"> <properties></properties>...</aspect> (i.e. no properties on the aspect)
+        		 * then policyDef.getPropertyDefinitions() returns null. Fair enough, I guess. 
+        		 * 	
+        		 */
+        		if (null == aspectProps)
+        			continue;
         		for (String prop : aspectProps.keySet()) {
         			log.trace("Found property " + prop + " on policy " + cmisPolicy + ", adding to CmisContainer property list");
         			returnProps.put(prop, aspectProps.get(prop));
