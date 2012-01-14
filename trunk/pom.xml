@@ -20,9 +20,54 @@
   <artifactId>vaadin-cmis-integration-root</artifactId>
   <version>0.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
-  <name>vaadin-cmis-integration root project</name>
+  <name>Vaadin-CMIS-Integration Project Root</name>
+  <description>
+  	CMIS persistence store and development toolkit for Vaadin. Supports CRUD of complex Alfresco content structures, search, and
+  	handles common CMIS and Alfresco-related tasks. Demo app requires Spring, Servlet 3.0.
+  </description>
 
+	<developers>
+	 <developer>
+     <id>aaron</id>
+     <name>Aaron Lee</name>
+     <organization>Fatminds</organization>
+     <organizationUrl>http://www.fatminds.com</organizationUrl>
+     <roles>
+       <role>developer</role>
+     </roles>
+     <timezone>0</timezone>
+   	</developer>
+	 <developer>
+     <id>vijay</id>
+     <name>Vijay Bangera</name>
+     <organization>Fatminds</organization>
+     <organizationUrl>http://www.fatminds.com</organizationUrl>
+     <roles>
+       <role>developer</role>
+     </roles>
+     <timezone>0</timezone>
+   	</developer>
+	</developers>
+  
+  
+	 <licenses>
+	  <license>
+	    <name>Apache 2</name>
+	    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+	    <distribution>repo</distribution>
+	    <comments>A business-friendly OSS license</comments>
+	  </license>
+	</licenses>
+  
+  
+  
+  <scm>
+    <connection>scm:svn:http://vaadin-cmis.googlecode.com/svn/trunk/</connection>
+    <developerConnection>scm:svn:https://vaadin-cmis.googlecode.com/svn/trunk/</developerConnection>
+    <url>http://code.google.com/p/vaadin-cmis/source/browse/</url>
+  </scm>
+  
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <addonBaseName>vaadin-cmis-integration-addon</addonBaseName>
