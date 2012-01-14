@@ -118,11 +118,16 @@ public class AlfrescoCmisHelper {
 						return d.toDateTimeAtMidnight().toGregorianCalendar();
 					}
 					catch (IllegalArgumentException e3) {
-						log.error("Cannot parse date/time string " + inVal);
+						try {
+							LocalDate d = DateTimeFormat.forPattern("MM/dd/yy").parseLocalDate(inVal);
+							return d.toDateTimeAtMidnight().toGregorianCalendar();
+						}
+						catch (IllegalArgumentException e4){
+						}
 					}
 				}
 			}
-		
+		log.error("Cannot parse date/time string " + inVal);
 		throw new IllegalArgumentException("Cannot parse date/time string " + inVal);
 	}
 
