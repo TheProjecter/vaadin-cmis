@@ -157,7 +157,7 @@ public class AlfrescoCmisHelper {
 				retVals.add(attemptDateParse(token));
 			}
 			else if (PropertyType.DECIMAL.value() == type.value()) {
-				retVals.add(BigDecimal.valueOf(Double.valueOf(token)));
+				retVals.add(new BigDecimal(token));
 			}
 			else if (PropertyType.HTML.value() == type.value()) {
 				retVals.add(token);
@@ -166,7 +166,7 @@ public class AlfrescoCmisHelper {
 				retVals.add(new ObjectIdImpl(token));
 			}
 			else if (PropertyType.INTEGER.value() == type.value()) {
-				retVals.add(Long.valueOf(token));
+				retVals.add(new Long(new BigDecimal(token).longValue())); // Handles dotted "integers" (sigh) like "15.0"
 			}
 			else if (PropertyType.STRING.value() == type.value()) {
 				retVals.add(token);
