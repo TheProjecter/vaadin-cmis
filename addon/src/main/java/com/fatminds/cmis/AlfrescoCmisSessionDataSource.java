@@ -50,7 +50,7 @@ public class AlfrescoCmisSessionDataSource {
 	
 	// Defaults
 	// TODO: Expose this to spring configuration
-	protected String bindingType = BindingType.ATOMPUB.value();
+	protected String bindingType = BindingType.WEBSERVICES.value();
 	protected String objectFactoryClass = "org.alfresco.cmis.client.impl.AlfrescoObjectFactoryImpl";
 	
 	public AlfrescoCmisSessionDataSource() {
@@ -75,24 +75,47 @@ public class AlfrescoCmisSessionDataSource {
 					"], password [" + password + "]");
 		}
 		
-		String url = protocol + "://" + hostname + ":" + port + "/alfresco/service/cmis";
+		String url = protocol + "://" + hostname + ":" + port + "/alfresco/cmis";
 		
         // create session parameters
 		Map<String, String> sessionParameters = new HashMap<String, String>();
-		sessionParameters.put(SessionParameter.ATOMPUB_URL, 			url);
+		//sessionParameters.put(SessionParameter.ATOMPUB_URL, 			url);
 		sessionParameters.put(SessionParameter.BINDING_TYPE, 			bindingType);
 		sessionParameters.put(SessionParameter.USER, 					username);
 		sessionParameters.put(SessionParameter.PASSWORD, 				password);
 		sessionParameters.put(SessionParameter.OBJECT_FACTORY_CLASS, 	objectFactoryClass);
         //sessionParameters.put(SessionParameter.SESSION_TYPE, "persistent");
-		
+		sessionParameters.put(SessionParameter.WEBSERVICES_REPOSITORY_SERVICE, url + "/RepositoryService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_NAVIGATION_SERVICE, url + "/NavigationService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_OBJECT_SERVICE, url + "/ObjectService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_VERSIONING_SERVICE, url + "/VersioningService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_DISCOVERY_SERVICE, url + "/DiscoveryService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_RELATIONSHIP_SERVICE, url + "/RelationshipService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_MULTIFILING_SERVICE, url + "/MultiFilingService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_POLICY_SERVICE, url + "/PolicyService");
+		sessionParameters.put(SessionParameter.WEBSERVICES_ACL_SERVICE, url + "/ACLService");		
+				
 		log.debug("Connecting to " + bindingType + " endpoint " + url );
 		List<Repository> repositories = sessionFactory.getRepositories(sessionParameters);
         sessionParameters.put(SessionParameter.REPOSITORY_ID, repositories.get(0).getId());
         return sessionFactory.createSession(sessionParameters);
 	}
+
+	public static void main(String[] args){
+		if (args.length != 5){
+			System.err.println("Usage: maincmd proto host port user pass");
+			return;
+		}
+		AlfrescoCmisSessionDataSource ds = new AlfrescoCmisSessionDataSource();
+		ds.setProtocol(args[0]);
+		ds.setHostname(args[1]);
+		ds.setPort(Integer.valueOf(args[2]).intValue());
+		ds.setUsername(args[3]);
+		ds.setPassword(args[4]);
+		ds.getSession();
+	}
 	
-	
+
 	/**
 	 * @return the hostname
 	 */
