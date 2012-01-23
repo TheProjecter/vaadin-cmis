@@ -122,7 +122,7 @@ public class AlfrescoCmisHelper {
 	public static Document cloneDocument(Session session, Document source, Folder destination, Map<String, Object> replaceProps){
 		return (Document)cloneObject(session, source, destination, replaceProps, false);
 	}
-	public static Folder cloneFolder(Session session, Document source, Folder destination, Map<String, Object> replaceProps){
+	public static Folder cloneFolder(Session session, Folder source, Folder destination, Map<String, Object> replaceProps){
 		return (Folder)cloneObject(session, source, destination, replaceProps, false);
 	}
 	
