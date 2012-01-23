@@ -35,16 +35,21 @@ import java.util.Set;
 import org.alfresco.cmis.client.AlfrescoAspects;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.apache.chemistry.opencmis.client.api.ObjectType;
 import org.apache.chemistry.opencmis.client.api.OperationContext;
+import org.apache.chemistry.opencmis.client.api.Property;
+import org.apache.chemistry.opencmis.client.api.Relationship;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.runtime.ObjectIdImpl;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.chemistry.opencmis.commons.definitions.PropertyDefinition;
 import org.apache.chemistry.opencmis.commons.enums.Cardinality;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.PropertyType;
+import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -74,6 +79,12 @@ public class AlfrescoCmisHelper {
 	
 	public static final String DASH_SEP_STRING = "---";
 
+	/**
+	 * 
+	 * @param f Excel file
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public static ContentStream getContentStream(File f) throws FileNotFoundException{
 		if (null == f)
 			return null;
@@ -83,6 +94,12 @@ public class AlfrescoCmisHelper {
 		return cs;
 	}
 	
+	/**
+	 * Split and return an array of trimmed tokens
+	 * @param in
+	 * @param splitBy regex
+	 * @return
+	 */
 	public static String[] splitTrimString(String in, String splitBy){
 		if (!StringUtils.hasText(in) || !StringUtils.hasText(splitBy)){
 			return new String[]{};
@@ -96,8 +113,85 @@ public class AlfrescoCmisHelper {
 		}
 		return tokens;
 	}
+		
+	/*********************************************************************************************\
+	 * CMIS object (and tree) cloning                                                            *
+	 *                                                                                           *
+	\*********************************************************************************************/
 	
+	public static Document cloneDocument(Session session, Document source, Folder destination, Map<String, Object> replaceProps){
+		return (Document)cloneObject(session, source, destination, replaceProps, false);
+	}
+	public static Folder cloneFolder(Session session, Document source, Folder destination, Map<String, Object> replaceProps){
+		return (Folder)cloneObject(session, source, destination, replaceProps, false);
+	}
 	
+	/*
+	 * @param source - the Folder or Document you wish to clone
+	 * @param replacementProps - properties that will replace values from the source object in the cloned
+	 * object. Note ***MUST*** contain an entry for cmis:name if you are copying the object into the same space as its source, 
+	 * and that entry must be unique according to the rules for cmis:name. 
+	 * @return the cloned object, or null if any of the inputs were null
+	 * 
+	 */
+	protected static CmisObject cloneObject(Session session, CmisObject source, Folder destFolder, Map<String, Object> replacementProps, boolean recurse){
+		if (null == source || null == replacementProps || null == session || null == destFolder){
+			return null;
+		}
+		Map<String, Object> newProps = clonePropsForObjectClone(source);
+		for (String k: replacementProps.keySet()){
+			newProps.put(k, replacementProps.get(k));
+		}
+		CmisObject newObject;
+		if (source instanceof Document){
+			Document srcDoc = (Document) source;
+			newObject = destFolder.createDocument(newProps, null, VersioningState.NONE);
+		}
+		else { // source is a Folder
+			Folder srcFolder = (Folder) source;
+			newObject = destFolder.createFolder(newProps);
+			if (recurse){
+				for (CmisObject obj : srcFolder.getChildren()){
+					Map<String, Object> emptyProps = new HashMap<String, Object>();
+					cloneObject(session, obj, ((Folder)newObject), emptyProps, true);
+				}
+			}
+			Folder newFolder = (Folder)newObject;
+		}
+		for (Relationship r : source.getRelationships()){
+			if (r.getSource() == source){ // Copy only source relationships
+		    	Map<String, Object> props = new HashMap<String, Object>();
+		    	props.put(PropertyIds.SOURCE_ID, newObject.getId());
+		    	props.put(PropertyIds.TARGET_ID, r.getTargetId().toString());
+		    	props.put(PropertyIds.OBJECT_TYPE_ID, r.getPropertyValue(PropertyIds.OBJECT_TYPE_ID));
+		    	ObjectId newRelationId = session.createRelationship(props);
+			}
+		}
+		return newObject;
+	}
+	/**
+	 * 
+	 * @param toBeCloned
+	 * @return shallow clone of the map
+	 */
+	protected static Map<String, Object> clonePropsForObjectClone(CmisObject obj){
+		Map<String, Object> cloned = new HashMap<String, Object>();
+		if (null == obj){
+			return cloned;
+		}
+		for (Property p : obj.getProperties()){
+			cloned.put(p.getId(), p.getValue());
+		}
+		return cloned;
+	}
+	
+	/**
+	 * Try several different date formats (in order of descending specificity) to parse a potential
+	 * date string.
+	 * @param inVal
+	 * @return
+	 * @throws IllegalArgumentException if the string cannot be successfully parsed into a date.
+	 */
 	public static GregorianCalendar attemptDateParse(String inVal) {
 		if (null == inVal || inVal.length() < 1)
 			throw new IllegalArgumentException("Cannot parse null date/time string");
