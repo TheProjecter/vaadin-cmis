@@ -75,6 +75,11 @@ public class AlfrescoCmisHelper {
 	
 	protected static final ObjectMapper mapper = new ObjectMapper();
 	
+	/**
+	 * Cache typeinfo, it's expensive to retrieve
+	 */
+	protected static final Map<String, AlfrescoCmisTypeInfo> typeInfo = new HashMap<String, AlfrescoCmisTypeInfo>();
+	
 	public static final String ALF_DICT_API_BASE =  "/alfresco/service/api/classes/";
 	
 	public static final String DASH_SEP_STRING = "---";
@@ -119,12 +124,11 @@ public class AlfrescoCmisHelper {
 	 *                                                                                           *
 	\*********************************************************************************************/
 	
-	public static Document cloneDocument(Session session, Document source, Folder destination, Map<String, Object> replaceProps){
-		return (Document)cloneObject(session, source, destination, replaceProps, false);
+	public static Document cloneDocument(AlfrescoCmisSessionDataSource dataSource, Document source, Folder destination, Map<String, Object> replaceProps){
+		return (Document)cloneObject(dataSource, source, destination, replaceProps, false);
 	}
-	public static Folder cloneFolder(Session session, Folder source, Folder destination, Map<String, Object> replaceProps){
-		return (Folder)cloneObject(session, source, destination, replaceProps, false);
-	}
+	public static Folder cloneFolder(AlfrescoCmisSessionDataSource dataSource, Folder source, Folder destination, Map<String, Object> replaceProps){
+		return (Folder)cloneObject(dataSource, source, destination, replaceProps, false);
 	
 	/*
 	 * @param source - the Folder or Document you wish to clone
@@ -134,14 +138,23 @@ public class AlfrescoCmisHelper {
 	 * @return the cloned object, or null if any of the inputs were null
 	 * 
 	 */
-	protected static CmisObject cloneObject(Session session, CmisObject source, Folder destFolder, Map<String, Object> replacementProps, boolean recurse){
-		if (null == source || null == replacementProps || null == session || null == destFolder){
+	protected static CmisObject cloneObject(AlfrescoCmisSessionDataSource dataSource, CmisObject source, Folder destFolder, Map<String, Object> replacementProps, boolean recurse){
+		if (null == source || null == replacementProps || null == dataSource || null == destFolder){
 			return null;
 		}
-		Map<String, Object> newProps = clonePropsForObjectClone(source);
+
+		// Set up properties for new object. Start by copying the old.
+		Map<String, Object> newProps = cloneProps(source);
+		// Now copy over replacement properties supplied by caller (which had best include
+		// a (different) value for cmis:name, unless this is a recursed call for a child of some
+		// copied node). 
 		for (String k: replacementProps.keySet()){
 			newProps.put(k, replacementProps.get(k));
 		}
+		// Finally, calculate and apply the correct Alfresco-oriented cmis:objectTypeId set
+		AlfrescoCmisTypeInfo info = getTypeAndMandatoryAspectProperyDefinitions(dataSource, (String)newProps.get(PropertyIds.OBJECT_TYPE_ID));
+		newProps.put(PropertyIds.OBJECT_TYPE_ID, info.getCmisTypeIdWithMandatoryAspects());
+		
 		CmisObject newObject;
 		if (source instanceof Document){
 			Document srcDoc = (Document) source;
@@ -153,7 +166,7 @@ public class AlfrescoCmisHelper {
 			if (recurse){
 				for (CmisObject obj : srcFolder.getChildren()){
 					Map<String, Object> emptyProps = new HashMap<String, Object>();
-					cloneObject(session, obj, ((Folder)newObject), emptyProps, true);
+					cloneObject(dataSource, obj, ((Folder)newObject), emptyProps, true);
 				}
 			}
 			Folder newFolder = (Folder)newObject;
@@ -164,7 +177,7 @@ public class AlfrescoCmisHelper {
 		    	props.put(PropertyIds.SOURCE_ID, newObject.getId());
 		    	props.put(PropertyIds.TARGET_ID, r.getTargetId().toString());
 		    	props.put(PropertyIds.OBJECT_TYPE_ID, r.getPropertyValue(PropertyIds.OBJECT_TYPE_ID));
-		    	ObjectId newRelationId = session.createRelationship(props);
+		    	ObjectId newRelationId = dataSource.getSession().createRelationship(props);
 			}
 		}
 		return newObject;
@@ -174,7 +187,7 @@ public class AlfrescoCmisHelper {
 	 * @param toBeCloned
 	 * @return shallow clone of the map
 	 */
-	protected static Map<String, Object> clonePropsForObjectClone(CmisObject obj){
+	protected static Map<String, Object> cloneProps(CmisObject obj){
 		Map<String, Object> cloned = new HashMap<String, Object>();
 		if (null == obj){
 			return cloned;
@@ -694,6 +707,10 @@ public class AlfrescoCmisHelper {
 		if (null == cmisDataSource || null == cmisType)
 			throw new RuntimeException("cmisDataSource or cmisType was null");
 		
+		if (null != typeInfo.get(cmisType)){
+			return typeInfo.get(cmisType);
+		}
+		
 		Session session = cmisDataSource.getSession();
 		
 		ObjectType typeDef = session.getTypeDefinition(cmisType);
@@ -741,7 +758,9 @@ public class AlfrescoCmisHelper {
         		// request). This is not an error, so continue.
         	}
         }
-        return new AlfrescoCmisTypeInfo(cmisType, cmisTypeIdWithAspects, returnProps);
+        AlfrescoCmisTypeInfo info = new AlfrescoCmisTypeInfo(cmisType, cmisTypeIdWithAspects, returnProps);
+        typeInfo.put(cmisType, info);
+        return info;
 	}
 
 }
