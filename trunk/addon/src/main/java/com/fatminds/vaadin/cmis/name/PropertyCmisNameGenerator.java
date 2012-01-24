@@ -6,6 +6,7 @@ package com.fatminds.vaadin.cmis.name;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.fatminds.cmis.AlfrescoCmisHelper;
 import com.vaadin.ui.Field;
@@ -30,6 +31,34 @@ public class PropertyCmisNameGenerator implements CmisNameGenerator{
 		this.propNames = propNames;
 	}
 	
+	public String getName(Map <String, Object> properties){
+		StringBuffer name = new StringBuffer();
+		for (String prop : propNames) {
+			Object obj = properties.get(prop);
+			if (null == obj) {
+				throw new IllegalArgumentException("Form is missing expected property " + prop);
+			}
+
+			String value=null;
+			if (obj instanceof String) {
+				value = (String)obj;
+			}
+			else if (obj instanceof ArrayList){
+				value = flatten((ArrayList)obj);
+			}
+			else {
+				throw new RuntimeException("Cannot handle non-String, non-ArrayList property " + prop);
+			}
+			if (name.length() > 0) {
+				name.append("_");
+			}
+			name.append(value);
+		}
+		if (0 == name.length()) {
+			throw new IllegalArgumentException("All configured field data sources are null");
+		}
+		return AlfrescoCmisHelper.sanitizeForCmisName(name.toString());		
+	}
 	
 	public String getName(Form form) {
 		StringBuffer name = new StringBuffer();
