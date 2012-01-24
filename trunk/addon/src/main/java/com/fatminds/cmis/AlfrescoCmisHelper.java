@@ -129,6 +129,7 @@ public class AlfrescoCmisHelper {
 	}
 	public static Folder cloneFolder(AlfrescoCmisSessionDataSource dataSource, Folder source, Folder destination, Map<String, Object> replaceProps){
 		return (Folder)cloneObject(dataSource, source, destination, replaceProps, false);
+	}
 	
 	/*
 	 * @param source - the Folder or Document you wish to clone
