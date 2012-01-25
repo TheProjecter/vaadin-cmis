@@ -268,6 +268,7 @@ public class CmisItem implements Item, Item.PropertySetChangeNotifier {
 		
 	}
 
+
 	/**
 	 * @return the cmisProperties
 	 */
