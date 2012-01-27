@@ -142,7 +142,14 @@ public class CmisProperty implements Property {
 			}
 		}
 		else {
-			this.value = AlfrescoCmisHelper.convert(newValue, getType());
+			try{
+				this.value = AlfrescoCmisHelper.convert(newValue, getType());
+			}catch(NumberFormatException e){
+				throw new ConversionException("Only numeric values allowed for this field!");
+			}catch (Exception e){
+				throw new ConversionException("Invalid value entered!");
+
+			}
 		}
 		//System.out.println("*** new Class = " + getValue().getClass() + ", NewVal=" + getValue() + " Old Value=" + oldVal );
 		//Add to dirty map if the value is changed and it is requested

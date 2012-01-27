@@ -451,6 +451,7 @@ public class CmisContainer<CMISTYPE extends CmisObject>
     		return;
     	
     	item.setCmisObject(item.getCmisObject().updateProperties(item.getDirtyValues()));
+    	fireItemSetChange();
     	fireContainerPropertySetChange();
 	}
 
