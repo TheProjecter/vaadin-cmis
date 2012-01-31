@@ -31,6 +31,7 @@ import org.apache.chemistry.opencmis.commons.enums.Cardinality;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.fatminds.vaadin.cmis.helper.CmisUrlNameHelper;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
@@ -206,7 +207,8 @@ public class CmisItem implements Item, Item.PropertySetChangeNotifier {
 		}
 		PropertyDefinition pd = container.getPropertyDefinition(propid); 
 		if (null == pd) {
-			throw new RuntimeException("Cannot get undefined property " + propid);
+			//throw new RuntimeException("Cannot get undefined property " + propid);
+			return null;
 		}
 		String name = container.getPropertyDefinition(propid).getDisplayName();
 		boolean multiple = container.getPropertyDefinition(propid).getCardinality().equals(Cardinality.MULTI);
@@ -250,6 +252,12 @@ public class CmisItem implements Item, Item.PropertySetChangeNotifier {
 			this.setCmisObject(this.container.createCmisObject(this));
 			this.container.addItem(this);
 			// add to container, since this Item was created outside the container
+			
+			//add the primary_url_name
+			if (this.getCmisProperty("fmbase:primary_url_name") != null){
+				addToDirtyValuesMap("fmbase:primary_url_name", CmisUrlNameHelper.generateUniqueFriendlyUrl(this));
+				this.container.updateObject(this);
+			}
 		}
 		else {
 			this.container.updateObject(this);
@@ -267,6 +275,10 @@ public class CmisItem implements Item, Item.PropertySetChangeNotifier {
 		this.getDirtyValues().clear();
 		
 	}
+	
+	
+
+	
 
 
 	/**
