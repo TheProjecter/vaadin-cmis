@@ -1,9 +1,5 @@
-#How to set up and run the demo app
+I suggest a brief perusal of the [http://code.google.com/p/vaadin-cmis/downloads/detail?name=manual.pdf&can=2&q= user manual]
 
-= Introduction =
+If you have questions or issues, please post them to the [http://code.google.com/p/vaadin-cmis/issues/list issues list]. 
 
-After following these instructions, you should be able to run the demo app. 
-
-= Details =
-
-TODO
+A mailing list will be up soon. 
