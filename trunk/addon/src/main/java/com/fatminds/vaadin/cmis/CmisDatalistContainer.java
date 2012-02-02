@@ -31,6 +31,7 @@ import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.chemistry.opencmis.client.api.ObjectId;
 import org.apache.chemistry.opencmis.client.api.ObjectType;
 import org.apache.chemistry.opencmis.client.api.OperationContext;
+import org.apache.chemistry.opencmis.client.api.Property;
 import org.apache.chemistry.opencmis.client.api.QueryResult;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
@@ -55,9 +56,11 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 	
 	public static final String DL_VALUE_PROPERTY = "fmbase:listvalue";
 	public static final String DL_LISTS_FOLDER_NAME = "lists";
+	public static final String DL_DEFAULT_VALUE = "fmbase:defaultListValue";
 	protected final Object propertyId; // The name of the property our datalist items will pretend to have
 	protected Map<String, CmisItem> propertyIdToItem = new HashMap<String, CmisItem>();
 	protected Folder listsRootFolder;
+	protected CmisItem defaultValue;
 	
 	/**
 	 * @return the propertyIdToItem
@@ -126,6 +129,9 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 			throw new RuntimeException("propertyId cannot be null");
 		this.propertyId = propertyId;
 	}
+	
+	
+
 	
 	/**
 	 * Find all distinct values for the property associated with the lookup list managed by this container, and populate the list with that
@@ -297,6 +303,25 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
                 fireItemSetChange();
             }
         }
+    }
+    
+    
+    public void setDefaultValue(CmisItem item){
+    	this.defaultValue = item;
+    	 Map<String, Object> properties = new HashMap<String, Object>();
+    	 properties.put(DL_DEFAULT_VALUE, item.getItemId());
+    	 this.rootFolder.updateProperties(properties);
+    	 fireItemSetChange();
+    }
+    
+    public CmisItem getDefaultValue(){
+    	if (this.defaultValue == null){
+    		String property = this.rootFolder.getPropertyValue(DL_DEFAULT_VALUE);
+    		if (property != null){
+        		this.defaultValue = this.getItem(property);
+    		}
+    	}
+    	return this.defaultValue;
     }
 
 	
