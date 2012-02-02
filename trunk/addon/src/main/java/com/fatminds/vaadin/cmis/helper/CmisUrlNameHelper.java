@@ -66,6 +66,6 @@ public class CmisUrlNameHelper {
         if (input == null){
             return "";
         }
-        return input.trim().toLowerCase().replaceAll("[^a-z\\s]", "").replaceAll("\\s", "-");
+        return input.trim().toLowerCase().replaceAll("[^a-z\\s]", "").trim().replaceAll("\\s", "-");
   }
 }
