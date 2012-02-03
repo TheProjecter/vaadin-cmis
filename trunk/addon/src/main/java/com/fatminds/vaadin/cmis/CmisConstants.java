@@ -53,6 +53,9 @@ public class CmisConstants {
 		INVISIBLE_FIELDS.add("cmis:contentStreamFileName");
 		INVISIBLE_FIELDS.add("cmis:contentStreamLength");
 		
+		//aspects fields
+		INVISIBLE_FIELDS.add("cmis:policyText");
+		
 		}
 	
 }
