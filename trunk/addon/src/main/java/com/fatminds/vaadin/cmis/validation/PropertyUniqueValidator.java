@@ -120,9 +120,9 @@ public class PropertyUniqueValidator extends AbstractValidator{
         String candidateValue = (String)value;
         
         // Build either object or aspect property query using CONTAINS
-		StringBuffer querySb = new StringBuffer().append("SELECT d.cmis:objectid FROM ").append(cmisType).append(" as d ");
+		StringBuffer querySb = new StringBuffer().append("SELECT d.cmis:objectId FROM ").append(cmisType).append(" as d ");
 	    if (propIsAspect) {
-        	querySb.append(" join ").append(aspectType).append(" as o on d.cmis:objectid = o.cmis:objectid");
+        	querySb.append(" join ").append(aspectType).append(" as o on d.cmis:objectId = o.cmis:objectId");
         }
 		querySb.append(" WHERE IN_TREE(d, '").append(validationScopeRoot.getId()).append("')");
 
