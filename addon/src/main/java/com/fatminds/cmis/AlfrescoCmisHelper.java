@@ -159,7 +159,7 @@ public class AlfrescoCmisHelper {
 		CmisObject newObject;
 		if (source instanceof Document){
 			Document srcDoc = (Document) source;
-			newObject = destFolder.createDocument(newProps, null, VersioningState.NONE);
+			newObject = destFolder.createDocument(newProps, null, VersioningState.MAJOR);
 		}
 		else { // source is a Folder
 			Folder srcFolder = (Folder) source;
@@ -194,7 +194,10 @@ public class AlfrescoCmisHelper {
 			return cloned;
 		}
 		for (Property p : obj.getProperties()){
-			cloned.put(p.getId(), p.getValue());
+			if (null != p.getValue()){
+				cloned.put(p.getId(), p.getValue());
+				log.debug("Cloned property " + p.getId() + ", val = " + p.getValueAsString());
+			}
 		}
 		return cloned;
 	}

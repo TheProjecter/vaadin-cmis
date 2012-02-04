@@ -172,7 +172,7 @@ public class UploadReceiver implements Upload.SucceededListener, Upload.FailedLi
 			try {
 				newDoc = uploadRoot.createDocument(props, 
 										contentStream, 
-										VersioningState.NONE, 
+										VersioningState.MAJOR, 
 										policies, 
 										removeAces, 
 										addAces, 
