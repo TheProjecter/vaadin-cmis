@@ -36,6 +36,13 @@ import org.slf4j.LoggerFactory;
  */
 public class AlfrescoCmisSessionDataSource {
 
+	public enum AlfrescoMajorVersion {
+		ALFRESCO_MAJOR_VERSION_3,
+		ALFRESCO_MAJOR_VERSION_4
+		// Note: Edit setAlfrescoMajorVersion(String version) if you
+		// add more values here.
+	};
+	
 	private static final Logger log = LoggerFactory.getLogger(AlfrescoCmisSessionDataSource.class);
 	
     // OpenCMIS session factory
@@ -47,6 +54,9 @@ public class AlfrescoCmisSessionDataSource {
 	protected int port;
 	protected String username;
 	protected String password;
+	// Default to alf 3.x
+	//protected AlfrescoMajorVersion alfrescoMajorVersion = AlfrescoMajorVersion.ALFRESCO_MAJOR_VERSION_3;
+	protected AlfrescoMajorVersion alfrescoMajorVersion;
 	
 	// Defaults
 	// TODO: Expose this to spring configuration
@@ -56,13 +66,34 @@ public class AlfrescoCmisSessionDataSource {
 	public AlfrescoCmisSessionDataSource() {
 		
 	}
-	
+	/**
+	 * Sets alfrescoMajorVersion to ALFRESCO_MAJOR_VERSION_3
+	 * @param protocol
+	 * @param hostname
+	 * @param port
+	 * @param username
+	 * @param password
+	 */
 	public AlfrescoCmisSessionDataSource(String protocol, String hostname, int port, String username, String password) {
 		this.protocol 	= protocol;
 		this.hostname 	= hostname;
 		this.port 		= port;
 		this.username 	= username;
 		this.password 	= password;
+	}
+	public AlfrescoCmisSessionDataSource(
+			String protocol, 
+			String hostname, 
+			int port, 
+			String username, 
+			String password, 
+			AlfrescoMajorVersion alfrescoMajorVersion) {
+		this.protocol 	= protocol;
+		this.hostname 	= hostname;
+		this.port 		= port;
+		this.username 	= username;
+		this.password 	= password;
+		this.alfrescoMajorVersion = alfrescoMajorVersion;
 	}
 	
 	public Session getSession() {
@@ -75,7 +106,14 @@ public class AlfrescoCmisSessionDataSource {
 					"], password [" + password + "]");
 		}
 		
-		String url = protocol + "://" + hostname + ":" + port + "/alfresco/cmis";
+		// Select the version of Alfresco in use
+		String url;
+		if (this.alfrescoMajorVersion.equals(AlfrescoMajorVersion.ALFRESCO_MAJOR_VERSION_3)){
+			url = protocol + "://" + hostname + ":" + port + "/alfresco/cmis";			
+		}
+		else {
+			url = protocol + "://" + hostname + ":" + port + "/alfresco/cmisws";						
+		}
 		
         // create session parameters
 		Map<String, String> sessionParameters = new HashMap<String, String>();
@@ -95,7 +133,7 @@ public class AlfrescoCmisSessionDataSource {
 		sessionParameters.put(SessionParameter.WEBSERVICES_POLICY_SERVICE, url + "/PolicyService");
 		sessionParameters.put(SessionParameter.WEBSERVICES_ACL_SERVICE, url + "/ACLService");		
 				
-		log.debug("Connecting to " + bindingType + " endpoint " + url );
+		log.debug("Connecting to Alfresco version " + this.alfrescoMajorVersion + " with bindingtype "+ bindingType + " at root " + url );
 		List<Repository> repositories = sessionFactory.getRepositories(sessionParameters);
         sessionParameters.put(SessionParameter.REPOSITORY_ID, repositories.get(0).getId());
         return sessionFactory.createSession(sessionParameters);
@@ -178,4 +216,30 @@ public class AlfrescoCmisSessionDataSource {
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
 	}
+	public AlfrescoMajorVersion getAlfrescoMajorVersion() {
+		return alfrescoMajorVersion;
+	}
+	public void setAlfrescoMajorVersion(AlfrescoMajorVersion alfrescoMajorVersion) {
+		this.alfrescoMajorVersion = alfrescoMajorVersion;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
