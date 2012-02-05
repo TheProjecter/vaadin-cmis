@@ -168,7 +168,7 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 		log.debug("**************Query: " + query);
 		OperationContext opCxt = session.createOperationContext();
 		ItemIterable<QueryResult> results = session.query(query, false, opCxt); // false = search only latest versions
-		log.debug("Loading " + results.getTotalNumItems() + " results ");
+		log.debug("Loading " + results.getPageNumItems() + " results ");
 		Set<String> values = new HashSet<String>();
 		for (QueryResult qResult : results) {
 			String objectId = qResult.getPropertyValueByQueryName(objectIdQName);
