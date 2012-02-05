@@ -142,7 +142,7 @@ public class PropertyUniqueValidator extends AbstractValidator{
         String query = querySb.toString();        
 		log.info("Querying: " + query);
 		ItemIterable<QueryResult> results = cmisSession.query(query, false); // false = search only latest versions
-		boolean result = results.getTotalNumItems() > 0 ? false : true;
+		boolean result = results.getPageNumItems() > 0 ? false : true;
 		log.info("Result: " + result );
 		lastValueChecked = value;
 		lastResponse = result;

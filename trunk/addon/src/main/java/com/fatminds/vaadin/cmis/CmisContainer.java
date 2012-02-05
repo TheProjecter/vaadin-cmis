@@ -237,8 +237,8 @@ public class CmisContainer<CMISTYPE extends CmisObject>
 		//List<CMISTYPE> allResults = new Vector<CMISTYPE>();
 		log.info("**************Query: " + query);
 		ItemIterable<QueryResult> results = session.query(query, false, opCxt); // false = search only latest versions
-		this.realSize = new Long(results.getTotalNumItems()).intValue(); ;
-		log.debug("Loading " + results.getTotalNumItems() + " results ");
+		this.realSize = new Long(results.getPageNumItems()).intValue();
+		log.debug("Loading " + results.getPageNumItems() + " results ");
 		for (QueryResult qResult : results) {
 			String objectId = qResult.getPropertyValueByQueryName(objectIdQName);
 			String type = qResult.getPropertyValueByQueryName("cmis:objectTypeId");
