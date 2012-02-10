@@ -142,7 +142,7 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 	 * is recursed until the type that DEFINES the property is found. It is this (base) type which is returned, such that 
 	 * all values of propertyId managed in this CMIS repository can be queried using the type returned. 
 	 */
-	public void populateListFromCatalogPropertyData(boolean clearListFirst, String[] typeCandidates) {
+	public void populateListFromCatalogPropertyData(boolean clearListFirst, String[] typeCandidates, String rootFolderId) {
 		ObjectType ot = AlfrescoCmisHelper.findPropertyOwnerClass(session, (String)propertyId, typeCandidates);
 		if (null == ot) {
 			throw new RuntimeException("Cannot find definition of property owner class for " + propertyId);
@@ -155,7 +155,7 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 				.append(" FROM ")
 				.append(ot.getQueryName())
 				.append(" WHERE IN_TREE('")
-				.append(this.rootFolder.getParents().get(0).getId()) // We want the parent one level above container's root (DL_LISTS_FOLDER_NAME)
+				.append(rootFolderId) // We want the parent one level above container's root (DL_LISTS_FOLDER_NAME)
 				.append("')");
 		// ORDER BY is not a good idea here, as not all properties that may have choice lists are
 		// necessarily able to be sorted by alfresco (depends on indexer settings for the property definition).
@@ -171,21 +171,22 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 		log.debug("Loading " + results.getPageNumItems() + " results ");
 		Set<String> values = new HashSet<String>();
 		for (QueryResult qResult : results) {
-			String objectId = qResult.getPropertyValueByQueryName(objectIdQName);
-			if (null == objectId || objectId.length() < 1) {
+			String datalistvalue = qResult.getPropertyValueByQueryName(this.propertyId.toString());
+			log.debug("Looking for  property=" + this.propertyId.toString() + "Found Datalistvalue=" + datalistvalue );
+			if (null == datalistvalue || datalistvalue.length() < 1) {
 				continue;
 			}
-			values.add(objectId);
+			values.add(datalistvalue);
 		}
 		List<String> sortedList = new Vector<String>(values);
 		Collections.sort(sortedList);
 		for (String objectId: sortedList) {
 			if (null == this.getItem(objectId)) {
-				
+				addItem(objectId, false);
+				log.trace("Added " + objectId);			
 			}
-			addItem(objectId, false);
-			log.trace("Added " + objectId);			
 		}
+		fireItemSetChange();
 	}
 
 	public void clearList() {
