@@ -172,7 +172,7 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 		Set<String> values = new HashSet<String>();
 		for (QueryResult qResult : results) {
 			String datalistvalue = qResult.getPropertyValueByQueryName(this.propertyId.toString());
-			log.debug("Looking for  property=" + this.propertyId.toString() + "Found Datalistvalue=" + datalistvalue );
+			log.debug("Looking for  property=" + this.propertyId.toString() + " Found Datalistvalue=" + datalistvalue );
 			if (null == datalistvalue || datalistvalue.length() < 1) {
 				continue;
 			}
@@ -186,7 +186,7 @@ public class CmisDatalistContainer extends CmisContainer<Document> {
 				log.trace("Added " + objectId);			
 			}
 		}
-		fireItemSetChange();
+		//fireItemSetChange();
 	}
 
 	public void clearList() {
