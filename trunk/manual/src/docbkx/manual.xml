@@ -48,7 +48,7 @@
 		<para>
 			We think that the combination of Alfresco's repository services, CMIS's strong dictionary 
 			support, and Vaadin's remarkably powerful server-side web application framework are an opportunity to
-			generate an ongoing string of wins product wins in many content-focused applications.
+			generate an ongoing string of product wins in many content-focused applications.
 			
 			This alpha work provides basic connectivity between Vaadin UI components and CMIS repository data and services. 
 			It is, first and foremost, incomplete; the missing features list is much longer than the other one. However lacking, 
