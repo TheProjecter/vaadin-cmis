@@ -84,6 +84,9 @@ public class AlfrescoCmisHelper {
 	
 	public static final String DASH_SEP_STRING = "---";
 
+	public static final String ALF_CATEGORY_API_BASE =  "/alfresco/service/fatminds/categories";
+
+	
 	/**
 	 * 
 	 * @param f Excel file
@@ -504,6 +507,23 @@ public class AlfrescoCmisHelper {
     	System.out.println("Mandatory aspects");
     	for (String s: props) {
     		System.out.println("\t " + s);
+    	}
+	}
+	
+	public static JsonNode getFatmindsCategories(AlfrescoCmisSessionDataSource cmisDataSource){
+	  	System.out.println("Getting Fatminds Category Tree");
+    	try {
+
+	  		return getJsonNodeFromHttpGetResponse(
+				"http://", 
+				cmisDataSource.getHostname(), 
+				cmisDataSource.getPort(),
+				cmisDataSource.getUsername(),
+				cmisDataSource.getPassword(),
+				ALF_CATEGORY_API_BASE);
+    	}
+    	catch (Exception e) {
+    		throw new RuntimeException("Could not retrieve Fatminds Category Tree.", e);
     	}
 	}
 	
