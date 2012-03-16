@@ -57,7 +57,9 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpParams;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
@@ -84,8 +86,9 @@ public class AlfrescoCmisHelper {
 	
 	public static final String DASH_SEP_STRING = "---";
 
-	public static final String ALF_CATEGORY_API_BASE =  "/alfresco/service/fatminds/categories";
+	public static final String ALF_CATEGORY_API_BASE =  "/alfresco/service/fatminds/categories/";
 
+	public static final String ALF_CATEGORY_CRUD_API_BASE =  "/alfresco/service/fatminds/category";
 	
 	/**
 	 * 
@@ -477,13 +480,28 @@ public class AlfrescoCmisHelper {
 		return true;
 	}
 	
-	public static JsonNode getJsonNodeFromHttpGetResponse(String proto, String host, int port, String user, String pass, String path) throws ClientProtocolException, IOException {
+	public static JsonNode getJsonNodeFromHttpGetResponse(String proto, String host, int port, String user, String pass, String path, HashMap params) throws ClientProtocolException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		try {
            client.getCredentialsProvider().setCredentials(
                     new AuthScope(host, port),
                     new UsernamePasswordCredentials(user, pass));
-           HttpGet get = new HttpGet(proto + host + ":" + port + path);
+           String paramStr = "";
+           if (params != null && params.size() >0){
+        	   Iterator<String> iter = params.keySet().iterator();
+        	   while(iter.hasNext()){
+        		   String key = iter.next();
+        		   //get.getParams().setParameter(key, params.get(key));
+        		   if (!paramStr.equals("")){
+        			   paramStr += "&";  
+        		   }
+        		   paramStr += key + "=" + params.get(key);
+        	   }
+           }
+           if (!paramStr.equals("")){
+        	   path += "?" +paramStr;
+           }
+           HttpGet get = new HttpGet(proto + host + ":" + port + path );
            log.info("Getting JsonNode for " + get.toString());
            HttpResponse resp = client.execute(get);
            if (resp.getStatusLine().getStatusCode() != 200) {
@@ -495,6 +513,10 @@ public class AlfrescoCmisHelper {
 		finally {
 			client.getConnectionManager().shutdown();
 		}
+	}
+
+	public static JsonNode getJsonNodeFromHttpGetResponse(String proto, String host, int port, String user, String pass, String path) throws ClientProtocolException, IOException {
+	 return getJsonNodeFromHttpGetResponse( proto,  host,  port,  user,  pass,  path, null);
 	}
 
 	public static void main(String[] args) {
@@ -527,6 +549,26 @@ public class AlfrescoCmisHelper {
     	}
 	}
 	
+	
+	public static JsonNode crudFatmindsCategory(AlfrescoCmisSessionDataSource cmisDataSource, String path, String action){
+	  	System.out.println("CRUD Fatminds Category");
+    	try {
+    		HashMap params = new HashMap();
+    		params.put("path", path);
+    		params.put("action", action);
+	  		return getJsonNodeFromHttpGetResponse(
+				"http://", 
+				cmisDataSource.getHostname(), 
+				cmisDataSource.getPort(),
+				cmisDataSource.getUsername(),
+				cmisDataSource.getPassword(),
+				ALF_CATEGORY_CRUD_API_BASE, params );
+    	}
+    	catch (Exception e) {
+    		throw new RuntimeException("Could not CRUD Fatminds Category", e);
+    	}
+	}
+
 	public static Set<String> getMandatoryAspects(AlfrescoCmisSessionDataSource cmisDataSource, String cmisTypename){
 		return getMandatoryAspects(
 				cmisTypename, 
@@ -541,7 +583,7 @@ public class AlfrescoCmisHelper {
     	String apiCall = ALF_DICT_API_BASE + cmisToAlfrescoTypename (cmisTypename);
     	System.out.println("Getting " + apiCall);
     	try {
-	    	JsonNode root = getJsonNodeFromHttpGetResponse("http://", host, port, user, pass, apiCall);
+	    	JsonNode root = getJsonNodeFromHttpGetResponse("http://", host, port, user, pass, apiCall, null);
 	    	
 	    	log.info("Got JSON root " + root.path("name").getTextValue());
 	    	return getMandatoryAspects(root);
