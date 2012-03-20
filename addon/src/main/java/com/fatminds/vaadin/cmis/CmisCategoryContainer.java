@@ -45,8 +45,9 @@ public class CmisCategoryContainer extends HierarchicalContainer{
 		String itemId= currNode.findValue("cm:nodeRef").getTextValue();
 		Item item = this.addItem(itemId);
           // Add name property for item
-        item.getItemProperty(CAT_PROPERTY_NAME).setValue( currNode.findValue("cm:name").getTextValue());
-        item.getItemProperty(CAT_DISPLAY_PATH).setValue( currNode.findValue("cm:displayPath").getTextValue());
+		String name = currNode.findValue("cm:name").getTextValue();
+        item.getItemProperty(CAT_PROPERTY_NAME).setValue(name );
+        item.getItemProperty(CAT_DISPLAY_PATH).setValue( currNode.findValue("cm:displayPath").getTextValue() + "/" + name);
         if (parentNode != null){
     		String parentId= parentNode.findValue("cm:nodeRef").getTextValue();
             this.setParent(itemId,parentId);
@@ -64,6 +65,10 @@ public class CmisCategoryContainer extends HierarchicalContainer{
 		Item parentItem = getItem(parentId);
 		Property parentDisplaypath = parentItem.getItemProperty(CmisCategoryContainer.CAT_DISPLAY_PATH);
 		String path = parentDisplaypath.getValue() + "/" + name;
+		
+		//Remove the part till /Topics
+		int pos = path.indexOf("/Topics/");
+		path = path.substring(pos+8);
 
 		JsonNode newNode = AlfrescoCmisHelper.crudFatmindsCategory(cmisDataSource, path, "create");
 		String itemId= newNode.findValue("cm:nodeRef").getTextValue();

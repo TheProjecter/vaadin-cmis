@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -498,8 +499,10 @@ public class AlfrescoCmisHelper {
         		   paramStr += key + "=" + params.get(key);
         	   }
            }
+           
+           
            if (!paramStr.equals("")){
-        	   path += "?" +paramStr;
+        	   path += "?" + URLEncoder.encode(paramStr, "UTF-8").replace("+", "%20");
            }
            HttpGet get = new HttpGet(proto + host + ":" + port + path );
            log.info("Getting JsonNode for " + get.toString());
